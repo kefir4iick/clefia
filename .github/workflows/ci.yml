@@ -1,0 +1,35 @@
+name: clefia test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: install compiler
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: create build directory
+        run: mkdir -p build
+
+      - name: compile tests
+        run: |
+          gcc -O2 -Wall -Wextra \
+            -Isrc \
+            -o p \
+            test/test.c \
+            src/core.c \
+            src/block.c \
+            src/keyschedule.c \
+            src/constants.c
+
+      - name: run tests
+        run: ./p
