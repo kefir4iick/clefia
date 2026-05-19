@@ -1,0 +1,29 @@
+name: qiskit
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        circuit: [ss0, ss1, ss2, ss3, s0]  
+      fail-fast: false  
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: install dependencies
+      run: |
+        pip install qiskit qiskit-aer matplotlib pylatexenc
+    
+    - name: run ${{ matrix.circuit }}
+      run: python quantum/${{ matrix.circuit }}.py
